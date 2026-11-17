@@ -1,0 +1,43 @@
+# cross-platform adaptation acceptance run 2026-11-17T14:12:17Z
+
+## tests/test_guardian_e2e.sh
+PASS: baseline add A
+PASS: baseline add B
+PASS: round1 level=info
+PASS: round2 level=fault (missing => fault)
+PASS: round2 records DRIFT
+PASS: round2 records MISSING
+PASS: round3 level=warn (drift only)
+PASS: page shows DRIFT
+PASS: page shows MISSING
+PASS: page colors fault rows
+PASS: heartbeat payload written
+PASS: no resident daemon (cron one-shot design)
+PASS: uninstall removes all files
+PASS: no cron residue (or cron unavailable in sandbox)
+----
+passed=14 failed=0
+
+## tests/test_start_py_dispatch.sh
+PASS: start.py --help exits 0
+PASS: help lists deploy and guardian subcommands
+PASS: help lists platform usage (Windows / start.cmd)
+PASS: unknown subcommand -> usage error 64
+PASS: start.py guardian help -> guardian.sh (exit 0)
+PASS: start.py guardian baseline list -> guardian.sh
+PASS: guardian.sh usage errors propagate through start.py
+PASS: start.py deploy -> start-auto-deploy.sh (usage rc 64)
+PASS: direct start-auto-deploy.sh behavior unchanged (rc 64)
+PASS: start.sh resolves python and runs start.py
+PASS: start.sh syntax OK
+PASS: start.command syntax OK
+PASS: start.cmd references start.py via %~dp0
+PASS: start.cmd has py/python fallback logic
+PASS: start.command cd's to repo (double-click friendly)
+PASS: macOS launchd adapter syntax OK (bash -n)
+PASS: launchd plist template well-formed XML (logic check)
+SKIP: pwsh not available: guardian.ps1 checked at logic level only; real Windows first-run must be confirmed once
+SKIP: schtasks/launchd scheduling cannot run on this sandbox: Windows task install and macOS launchctl load need a real-environment first run
+PASS: guardian/adapters contract documented
+----
+passed=18 failed=0 skipped=2
