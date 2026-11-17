@@ -1,0 +1,16 @@
+PASS: baseline add A
+PASS: baseline add B
+PASS: round1 level=info
+PASS: round2 level=fault (missing => fault)
+PASS: round2 records DRIFT
+PASS: round2 records MISSING
+PASS: round3 level=warn (drift only)
+PASS: page shows DRIFT
+PASS: page shows MISSING
+PASS: page colors fault rows
+PASS: heartbeat payload written
+PASS: no resident daemon (cron one-shot design)
+PASS: uninstall removes all files
+PASS: no cron residue (or cron unavailable in sandbox)
+----
+passed=14 failed=0

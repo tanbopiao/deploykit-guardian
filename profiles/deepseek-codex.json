@@ -1,0 +1,13 @@
+{
+  "name": "DeepSeek API 接入 Codex",
+  "npm_package": "@openai/codex",
+  "install_command": "command -v codex >/dev/null 2>&1 || npm install -g @openai/codex",
+  "node_version": "22",
+  "config_dir": "~/.codex",
+  "config_file": "models.json",
+  "config_template": "{\n  \"default_model\": \"{{MODEL}}\",\n  \"providers\": {\n    \"deepseek\": {\n      \"name\": \"DeepSeek\",\n      \"base_url\": \"{{BASE_URL}}\",\n      \"api_key_env\": \"DEEPSEEK_API_KEY\",\n      \"wire_api\": \"chat\",\n      \"models\": [\"deepseek-chat\", \"deepseek-reasoner\"]\n    }\n  },\n  \"profiles\": {\n    \"deepseek\": {\n      \"model\": \"deepseek-chat\",\n      \"model_provider\": \"deepseek\"\n    }\n  }\n}",
+  "env_keys": ["DEEPSEEK_API_KEY"],
+  "default_model": "deepseek-chat",
+  "verify_command": "test -f ~/.codex/models.json && codex --version >/dev/null 2>&1",
+  "docs_url": "https://api-docs.deepseek.com"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "OpenAI Codex CLI",
+  "npm_package": "@openai/codex",
+  "node_version": "22",
+  "config_dir": "~/.codex",
+  "config_file": "auth.json",
+  "config_template": "{ \"OPENAI_API_KEY\": \"{{API_KEY}}\" }",
+  "env_keys": ["OPENAI_API_KEY"],
+  "verify_command": "codex --version >/dev/null 2>&1",
+  "docs_url": "https://github.com/openai/codex"
+}

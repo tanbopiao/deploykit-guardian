@@ -1,0 +1,12 @@
+{
+  "_comment": "任意Codex同类产品通用模板：复制本文件改名，填四项即可接入（npm包名/配置目录/配置模板/验收命令）。非npm产品用 install_command 替代 npm_package。",
+  "name": "Any Agent CLI",
+  "npm_package": "@scope/your-agent-cli",
+  "node_version": "22",
+  "config_dir": "~/.your-agent",
+  "config_file": "config.json",
+  "config_template": "{ \"api_key\": \"{{API_KEY}}\" }",
+  "env_keys": ["YOUR_API_KEY"],
+  "verify_command": "your-agent --version >/dev/null 2>&1",
+  "docs_url": ""
+}

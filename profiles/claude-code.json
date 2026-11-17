@@ -1,0 +1,11 @@
+{
+  "name": "Claude Code",
+  "npm_package": "@anthropic-ai/claude-code",
+  "node_version": "20",
+  "config_dir": "~/.claude",
+  "config_file": "settings.json",
+  "config_template": "{ \"env\": { \"ANTHROPIC_API_KEY\": \"{{API_KEY}}\" } }",
+  "env_keys": ["ANTHROPIC_API_KEY"],
+  "verify_command": "claude --version >/dev/null 2>&1",
+  "docs_url": "https://docs.anthropic.com/claude-code"
+}
