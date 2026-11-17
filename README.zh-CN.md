@@ -17,20 +17,38 @@ DeployKit Guardian 是一套开源的**装后守护**工具，为"一键部署"�
 
 ```sh
 # 部署（dry-run 校验档案与链路）
-bash start-auto-deploy.sh profiles/codex.json --dry-run
+./start.sh deploy profiles/codex.json --dry-run
 
 # 真实部署
-bash start-auto-deploy.sh profiles/codex.json
+./start.sh deploy profiles/codex.json
 
 # 部署完成后登记基线指纹
-guardian/guardian.sh baseline add /opt/myapp/main.conf
+./start.sh guardian baseline add /opt/myapp/main.conf
 
 # 启动每小时心跳＋巡检（仅出站，不开端口）
-guardian/guardian.sh heartbeat start
+./start.sh guardian heartbeat start
 
 # 查看守护回执
-guardian/guardian.sh page   # 打开 ~/.guardian/page/receipt.html
+./start.sh guardian page   # 打开 ~/.guardian/page/receipt.html
 ```
+
+`start.sh` 只是统一 Python 入口 `start.py` 的薄包装（见下方「平台支持」）；
+原有的 `bash start-auto-deploy.sh …` 与 `guardian/guardian.sh …` 用法保持不变。
+
+## 平台支持
+
+| 能力 | Linux | macOS | Windows 原生 | WSL2 |
+| --- | --- | --- | --- | --- |
+| B1 部署流水线 | ✅（bash，原始路径） | ✅ | 经 WSL2（检测到 WSL2 时 `start.py deploy` 自动委托） | ✅ |
+| B2 守护核心 | ✅ cron 心跳 | ✅ cron 心跳（默认） | — | ✅ cron 心跳 |
+| B2 守护原生定时 | — | 可选 launchd 适配（`guardian/adapters/macos/`） | ✅ schtasks 每小时任务（`guardian/adapters/windows/guardian.ps1`） | — |
+| 回执页 / 巡检 / 干净卸载 | ✅ | ✅ | ✅ | ✅ |
+| 启动入口 | `start.sh` / `start.command` | `start.sh` / `start.command`（双击友好） | `start.cmd`（调 `start.py`，守护委托 PowerShell 适配层） | `start.sh` |
+
+全平台共享同一套设计保证：仅出站、只读巡检、只传指纹不传内容、一条命令
+干净卸载（`start.py guardian uninstall` / `guardian.ps1 uninstall`）。
+平台差异（定时方式、哈希工具、出站请求）全部收敛在
+[`guardian/adapters/`](guardian/adapters/README.md)。
 
 ## 设计保证（v0）
 
@@ -51,12 +69,17 @@ guardian/guardian.sh page   # 打开 ~/.guardian/page/receipt.html
 ## 目录结构
 
 ```
+├── start.py                # 跨平台统一入口（deploy / guardian）
+├── start.sh                # POSIX 薄包装（Linux / macOS / WSL2）
+├── start.command           # macOS 薄包装（双击友好）
+├── start.cmd               # Windows 薄包装
 ├── start-auto-deploy.sh    # B1 总控（预检 → 部署 → 校验 → 台账）
 ├── guardian/               # B2 装后守护 v0
-│   └── guardian.sh         # 心跳 / 巡检 / 回执页 / 卸载
+│   ├── guardian.sh         # 心跳 / 巡检 / 回执页 / 卸载（默认 cron）
+│   └── adapters/           # 平台适配层（windows / macos）
 ├── lib/ modules/ profiles/ adapters/   # B1 模块
 ├── examples/               # 完整示例
-├── tests/                  # 验收测试（沙箱全流程）
+├── tests/                  # 验收测试（沙箱全流程 + 入口分发）
 ├── docs/                   # 安装指南与设计文档
 └── ROADMAP.md              # B 系列产品线规划
 ```

@@ -6,6 +6,23 @@
 - `bash`、`python3`（≥3.8）、`curl`（可选，用于 webhook 上报与 npm 镜像探测）
 - 预检会自动检查：内存 ≥ 2G、磁盘可用 ≥ 5G、npm 镜像连通性，不满足时自动降级为 GUI 兜底模式
 
+## 平台支持矩阵（Platform Support）
+
+| 能力 | Linux | macOS | Windows 原生 | WSL2 |
+| --- | --- | --- | --- | --- |
+| B1 一键部署 | ✅ bash | ✅ bash | 经 WSL2 | ✅ |
+| B2 守护（心跳 / 巡检 / 回执 / 卸载） | ✅ cron | ✅ cron（默认），可选 launchd | ✅ schtasks（PowerShell 适配层） | ✅ cron |
+| 启动入口 | `start.sh` | `start.sh` / `start.command`（双击） | `start.cmd` | `start.sh` |
+
+统一入口为 `start.py`（自动兼容 python3 / python），各平台薄壳都只是调它：
+
+- Linux / macOS / WSL2：`./start.sh deploy profiles/codex.json`
+- macOS 双击：`open start.command`（在终端中运行）
+- Windows：`start.cmd guardian heartbeat start`（守护走原生 PowerShell 适配层；
+  B1 部署为 bash 流水线，检测到 WSL2 时自动委托，否则提示安装 WSL2）
+
+原有路径 `bash start-auto-deploy.sh …` 与 `guardian/guardian.sh …` 保持不变。
+
 ## 安装 B1 一键部署套件
 
 ```sh
@@ -71,6 +88,14 @@ guardian/guardian.sh page
 #    页面位置：~/.guardian/page/receipt.html（无需登录）
 ```
 
+跨平台写法：以上命令等价于 `./start.sh guardian …`（或 Windows 上的
+`start.cmd guardian …`，由原生 PowerShell 适配层执行，行为契约一致）。
+macOS 想用 launchd 替代 cron 时（可选）：
+
+```sh
+guardian/adapters/macos/install-launchd.sh install   # 幂等；remove 卸载
+```
+
 ### 可选配置（环境变量）
 
 | 变量 | 默认 | 说明 |
@@ -92,7 +117,9 @@ bash tests/test_guardian_e2e.sh
 
 ```sh
 # B2 守护：一条命令干净移除（含定时项）
-guardian/guardian.sh uninstall
+guardian/guardian.sh uninstall        # 或 ./start.sh guardian uninstall
+
+# Windows 原生：guardian.ps1 uninstall（删除 schtasks 任务与 ~\.guardian 全部文件）
 
 # B1 套件：删除仓库目录即可；台账在 ~/.deploy-kit/ledger.jsonl，按需保留或删除
 ```

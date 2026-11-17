@@ -17,20 +17,40 @@ DeployKit Guardian is an open-source **post-deploy guardian** for systems instal
 
 ```sh
 # deploy (dry-run validates profile and pipeline)
-bash start-auto-deploy.sh profiles/codex.json --dry-run
+./start.sh deploy profiles/codex.json --dry-run
 
 # real deploy
-bash start-auto-deploy.sh profiles/codex.json
+./start.sh deploy profiles/codex.json
 
 # register baseline fingerprints right after deploy
-guardian/guardian.sh baseline add /opt/myapp/main.conf
+./start.sh guardian baseline add /opt/myapp/main.conf
 
 # start hourly heartbeat + patrol (outbound-only)
-guardian/guardian.sh heartbeat start
+./start.sh guardian heartbeat start
 
 # view receipts
-guardian/guardian.sh page   # open ~/.guardian/page/receipt.html
+./start.sh guardian page   # open ~/.guardian/page/receipt.html
 ```
+
+`start.sh` is a thin wrapper around the unified Python entry `start.py` (see
+[Platform support](#platform-support)); the plain `bash start-auto-deploy.sh …`
+and `guardian/guardian.sh …` paths remain fully valid and unchanged.
+
+## Platform support
+
+| Feature | Linux | macOS | Windows native | WSL2 |
+| --- | --- | --- | --- | --- |
+| B1 deploy pipeline | ✅ (bash, original path) | ✅ | via WSL2 (`start.py deploy` delegates automatically when WSL2 is present) | ✅ |
+| B2 guardian core | ✅ cron heartbeat | ✅ cron heartbeat (default) | — | ✅ cron heartbeat |
+| B2 guardian native scheduling | — | optional launchd adapter (`guardian/adapters/macos/`) | ✅ schtasks hourly task (`guardian/adapters/windows/guardian.ps1`) | — |
+| Receipt page, patrol, clean uninstall | ✅ | ✅ | ✅ | ✅ |
+| Entry point | `start.sh` / `start.command` | `start.sh` / `start.command` (double-click friendly) | `start.cmd` (calls `start.py`, delegates guardian to the PowerShell adapter) | `start.sh` |
+
+All platforms share the same design guarantees: outbound-only, read-only
+patrol, fingerprints only (never file contents), one-command clean uninstall
+(`start.py guardian uninstall` / `guardian.ps1 uninstall`). Platform
+differences (scheduling, hashing tool, outbound request) are confined to
+[`guardian/adapters/`](guardian/adapters/README.md).
 
 ## Design guarantees (v0)
 
@@ -51,12 +71,17 @@ guardian/guardian.sh page   # open ~/.guardian/page/receipt.html
 ## Repository layout
 
 ```
+├── start.py                # unified cross-platform entry (deploy / guardian)
+├── start.sh                # POSIX thin wrapper (Linux / macOS / WSL2)
+├── start.command           # macOS thin wrapper (double-click friendly)
+├── start.cmd               # Windows thin wrapper
 ├── start-auto-deploy.sh    # B1 orchestrator (precheck → deploy → verify → ledger)
 ├── guardian/               # B2 post-deploy guardian v0
-│   └── guardian.sh         # heartbeat / patrol / page / uninstall
+│   ├── guardian.sh         # heartbeat / patrol / page / uninstall (cron default)
+│   └── adapters/           # platform adaptation layer (windows / macos)
 ├── lib/ modules/ profiles/ adapters/   # B1 modules
 ├── examples/               # worked examples
-├── tests/                  # acceptance tests (sandbox e2e)
+├── tests/                  # acceptance tests (sandbox e2e + entry dispatch)
 ├── docs/                   # install guide, design docs
 └── ROADMAP.md              # B-series product line plan
 ```
