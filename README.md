@@ -68,6 +68,17 @@ differences (scheduling, hashing tool, outbound request) are confined to
 - `warn` — drift detected (content changed)
 - `fault` — baseline file removed (or check script failure escalated)
 
+## Deployment archive (B3)
+
+Every automated deploy is recorded in an append-only local ledger. One command
+turns it into a public, static archive — a JSON ledger plus a single-file HTML
+page showing package ID, environment profile, verification status and SHA-256
+fingerprint. Customer content and absolute paths never leave the ledger:
+
+```sh
+python3 modules/archive-market.py build --out ./archive
+```
+
 ## Repository layout
 
 ```
@@ -79,7 +90,7 @@ differences (scheduling, hashing tool, outbound request) are confined to
 ├── guardian/               # B2 post-deploy guardian v0
 │   ├── guardian.sh         # heartbeat / patrol / page / uninstall (cron default)
 │   └── adapters/           # platform adaptation layer (windows / macos)
-├── lib/ modules/ profiles/ adapters/   # B1 modules
+├── lib/ modules/ profiles/ adapters/   # B1 modules (incl. archive-market.py)
 ├── examples/               # worked examples
 ├── tests/                  # acceptance tests (sandbox e2e + entry dispatch)
 ├── docs/                   # install guide, design docs
@@ -90,7 +101,8 @@ differences (scheduling, hashing tool, outbound request) are confined to
 
 - B1: shipped (v1.1), used in production deploys.
 - B2: v0 implemented, sandbox acceptance passing (see `tests/e2e-run-*.log`).
-- B3/B4: planned, see [ROADMAP.md](ROADMAP.md).
+- B3: v0 implemented, sandbox acceptance passing (13/13, `tests/test_archive_market.sh`).
+- B4: planned, see [ROADMAP.md](ROADMAP.md).
 
 ## License
 

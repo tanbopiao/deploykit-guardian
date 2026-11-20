@@ -66,6 +66,16 @@ DeployKit Guardian 是一套开源的**装后守护**工具，为"一键部署"�
 - `warn` —— 发现漂移（内容变化）
 - `fault` —— 基线文件被删除（或检查脚本报错升级）
 
+## 部署档案（B3）
+
+每次自动部署都会记入只增不覆盖的本地台账。一条命令即可生成对外静态档案——
+JSON 台账加单文件 HTML 页，展示包编号、适用环境、验证状态与 SHA-256 指纹；
+客户内容与绝对路径按构造即被剔除，绝不外泄：
+
+```sh
+python3 modules/archive-market.py build --out ./archive
+```
+
 ## 目录结构
 
 ```
@@ -77,7 +87,7 @@ DeployKit Guardian 是一套开源的**装后守护**工具，为"一键部署"�
 ├── guardian/               # B2 装后守护 v0
 │   ├── guardian.sh         # 心跳 / 巡检 / 回执页 / 卸载（默认 cron）
 │   └── adapters/           # 平台适配层（windows / macos）
-├── lib/ modules/ profiles/ adapters/   # B1 模块
+├── lib/ modules/ profiles/ adapters/   # B1 模块（含 archive-market.py）
 ├── examples/               # 完整示例
 ├── tests/                  # 验收测试（沙箱全流程 + 入口分发）
 ├── docs/                   # 安装指南与设计文档
@@ -88,7 +98,8 @@ DeployKit Guardian 是一套开源的**装后守护**工具，为"一键部署"�
 
 - B1：已交付（v1.1），生产环境在用。
 - B2：v0 已实现，沙箱验收通过（见 `tests/e2e-run-*.log`）。
-- B3/B4：规划中，见 [ROADMAP.md](ROADMAP.md)。
+- B3：v0 已实现，沙箱验收通过（13/13，`tests/test_archive_market.sh`）。
+- B4：规划中，见 [ROADMAP.md](ROADMAP.md)。
 
 ## 许可证
 

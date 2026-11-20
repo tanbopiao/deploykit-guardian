@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- B3 deployment-archive market v0: `modules/archive-market.py build` turns the
+  append-only deploy ledger into a public static archive (JSON ledger +
+  single-file HTML page). Public fields only — package ID, timestamp, mode,
+  profile, package basename, SHA-256 fingerprint, status; customer content and
+  absolute paths are dropped by construction. Idempotent rebuild; torn ledger
+  tail lines never block the build.
+- Acceptance test `tests/test_archive_market.sh` (13 checks: ledger → build →
+  field shape → leak tests → idempotency → torn-line tolerance).
+
 ## [0.2.0] - 2026-11-20
 
 ### Added
