@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- B4 website deployment channel v0: `modules/site-channel.py` — intake board
+  (order IDs, type, status; customer notes never rendered) and a no-code
+  wizard guide page for non-developers. Static build-time render, zero new
+  server components; idempotent rebuild; torn tail lines tolerated.
+- Acceptance test `tests/test_site_channel.sh` (13 checks: intake → board →
+  status transition → leak tests → guide → idempotency).
+
 ## [0.3.0] - 2026-11-20
 
 ### Added

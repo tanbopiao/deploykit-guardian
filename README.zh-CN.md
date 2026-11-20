@@ -76,6 +76,17 @@ JSON 台账加单文件 HTML 页，展示包编号、适用环境、验证状态
 python3 modules/archive-market.py build --out ./archive
 ```
 
+## 网站部署通道（B4）
+
+面向非开发者：四步向导引导页（准备压缩包 → 提交需求单 → 自动部署 → 验收回执）
+加接单看板（订单号/类型/状态）。客户备注绝不出现在公开看板上：
+
+```sh
+python3 modules/site-channel.py intake add --type static-site
+python3 modules/site-channel.py board --out ./channel
+python3 modules/site-channel.py guide --out ./channel
+```
+
 ## 目录结构
 
 ```
@@ -87,7 +98,7 @@ python3 modules/archive-market.py build --out ./archive
 ├── guardian/               # B2 装后守护 v0
 │   ├── guardian.sh         # 心跳 / 巡检 / 回执页 / 卸载（默认 cron）
 │   └── adapters/           # 平台适配层（windows / macos）
-├── lib/ modules/ profiles/ adapters/   # B1 模块（含 archive-market.py）
+├── lib/ modules/ profiles/ adapters/   # B1 模块（含 archive-market.py、site-channel.py）
 ├── examples/               # 完整示例
 ├── tests/                  # 验收测试（沙箱全流程 + 入口分发）
 ├── docs/                   # 安装指南与设计文档
@@ -99,7 +110,7 @@ python3 modules/archive-market.py build --out ./archive
 - B1：已交付（v1.1），生产环境在用。
 - B2：v0 已实现，沙箱验收通过（见 `tests/e2e-run-*.log`）。
 - B3：v0 已实现，沙箱验收通过（13/13，`tests/test_archive_market.sh`）。
-- B4：规划中，见 [ROADMAP.md](ROADMAP.md)。
+- B4：v0 已实现，沙箱验收通过（13/13，`tests/test_site_channel.sh`）。
 
 ## 许可证
 
