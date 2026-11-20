@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-20
+
 ### Added
 - B4 website deployment channel v0: `modules/site-channel.py` — intake board
   (order IDs, type, status; customer notes never rendered) and a no-code
